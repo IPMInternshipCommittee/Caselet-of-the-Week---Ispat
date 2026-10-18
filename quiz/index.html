@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caselet of the Week: Ispat - The Logistics Lever</title>
+<style>
+  :root{
+    --ink:#1e293b;
+    --navy:#073763;
+    --paper:#f2f1f6;
+    --panel:#ffffff;
+    --line:#cbd5e1;
+    --lightblue:#cfe2f3;
+    --accent:#5846c8;
+    --slate:#64748b;
+    --good:#16663f;
+    --good-bg:#d1f5df;
+    --bad:#a3281b;
+    --bad-bg:#fde2e1;
+  }
+
+  /* --- Force Georgia on every element --- */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    font-family: Georgia, 'Times New Roman', serif !important;
+  }
+
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .wrap{max-width:640px;margin:0 auto;background:var(--panel);}
+
+  .header{padding:20px 24px 0;}
+  .badge-row{margin-bottom:8px;}
+  .badge{
+    display:inline-block;
+    background:var(--lightblue);
+    color:var(--navy);
+    font-size:12px;
+    letter-spacing:.02em;
+    padding:4px 10px;
+    border-radius:3px;
+  }
+  h1{
+    font-size:24px;
+    line-height:1.25;
+    color:var(--navy);
+    margin:6px 0 8px;
+  }
+  .byline{
+    font-size:12.5px;
+    color:var(--slate);
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .lede{padding:0 24px;}
+  .lede p{font-size:14px;margin:0 0 12px;}
+  .framework{
+    font-size:16px;
+    font-weight:bold;
+    color:var(--navy);
+    margin:16px 0 12px;
+  }
+  .prompts{margin:0 0 26px;padding-left:18px;}
+  .prompts li{font-size:13px;margin-bottom:6px;}
+  .prompts strong{color:var(--navy);}
+
+  /* --- progress --- */
+  .progress-shell{padding:0 24px;margin-bottom:6px;}
+  .progress-track{
+    height:4px;
+    background:var(--lightblue);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--navy);
+    transition:width .35s ease;
+  }
+  .progress-label{
+    font-size:11px;
+    color:var(--slate);
+    margin:6px 0 20px;
+  }
+
+  /* --- quiz card --- */
+  .quizwrap{padding:0 24px;}
+  .card{
+    border-top:1px solid var(--line);
+    padding:20px 0;
+  }
+  .qcount{
+    font-size:12.5px;
+    color:var(--slate);
+    margin-bottom:4px;
+  }
+  .qtext{
+    font-weight:bold;
+    font-size:15px;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+
+  .css-quiz-group{margin:0 0 8px;font-size:13px;}
+  .css-quiz-opt{
+    display:flex;
+    align-items:stretch;
+    width:100%;
+    text-align:left;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:10px 12px;
+    margin-bottom:6px;
+    font-size:13px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .15s ease, background-color .15s ease;
+  }
+  .css-quiz-opt:hover:not(:disabled){border-color:var(--navy);}
+  .css-quiz-opt:disabled{cursor:default;}
+  .css-quiz-opt.correct{background:var(--good-bg);color:var(--good);font-weight:bold;border-color:var(--good);}
+  .css-quiz-opt.wrong{background:var(--bad-bg);color:var(--bad);font-weight:bold;border-color:var(--bad);}
+  .css-quiz-opt.dim{opacity:.55;}
+
+  .feedback{display:none;font-size:13px;color:#334155;}
+  .feedback.show{display:block;}
+  .feedback .why{margin:10px 0 10px;}
+  .feedback .why strong{color:var(--ink);}
+  .learnt{
+    background:#f8fafc;
+    border-left:3px solid var(--accent);
+    padding:8px 10px;
+  }
+  .learnt strong{display:block;color:var(--ink);margin-bottom:2px;}
+
+  .navrow{text-align:right;margin-top:14px;}
+  .nextbtn,.prevbtn{
+    font-size:13px;
+    border:none;
+    padding:9px 18px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .nextbtn{background:var(--navy);color:#fff;}
+  .nextbtn:hover:not(:disabled){background:#0d4a7d;}
+  .nextbtn:disabled{opacity:.4;cursor:default;}
+  .prevbtn{background:#fff;color:var(--navy);border:1px solid var(--line);margin-right:8px;}
+  .prevbtn:hover:not(:disabled){border-color:var(--navy);}
+  .prevbtn:disabled{opacity:.4;cursor:default;}
+
+  /* --- results --- */
+  .results{display:none;padding:0 24px 8px;}
+  .results.show{display:block;}
+  .score-hero{
+    text-align:center;
+    padding:22px 16px;
+    background:var(--lightblue);
+    border-radius:6px;
+    margin:20px 0 24px;
+  }
+  .score-eyebrow{
+    font-size:11.5px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--navy);
+    margin-bottom:6px;
+  }
+  .score-num{
+    font-size:34px;
+    font-weight:bold;
+    color:var(--navy);
+  }
+  .rank-title{
+    display:inline-block;
+    margin-top:8px;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:.02em;
+    color:var(--accent);
+    background:#fff;
+    border:1px solid var(--accent);
+    border-radius:3px;
+    padding:4px 12px;
+  }
+  .score-sub{
+    font-size:13px;
+    color:#1e3a5f;
+    margin-top:10px;
+  }
+
+  .recap-title{
+    text-align:center;
+    font-size:18px;
+    color:var(--navy);
+    margin:0 0 14px;
+  }
+  table.recap{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+    margin-bottom:8px;
+  }
+  table.recap th,table.recap td{
+    border:1px solid var(--line);
+    padding:6px 8px;
+    text-align:left;
+    vertical-align:top;
+  }
+  table.recap th{
+    font-weight:bold;
+    background:#f8fafc;
+    width:32%;
+    color:var(--navy);
+  }
+
+  .signoff{
+    padding:20px 24px;
+    font-size:13px;
+    color:#1e293b;
+  }
+  .signoff strong{display:block;margin-bottom:2px;}
+
+  @media (max-width:480px){
+    h1{font-size:20px;}
+    .score-num{font-size:28px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="badge-row"><span class="badge">Caselet of the Week</span></div>
+    <h1>Ispat &mdash; The Logistics Lever</h1>
+  </div>
+
+  <div class="lede" id="lede">
+    <p>This caselet works through a steel manufacturer's logistics cost problem using a simple four-step framework: understand the problem, compare the transportation modes, diagnose the root cause, and build an integrated recommendation.</p>
+    <p>Not every large cost is a saving. Focus first on separating an observed cost from what can actually be recovered within the existing contractual and labour constraints.</p>
+
+    <div class="framework">Understand the Problem &rarr; Compare the Modes &rarr; Diagnose the Root Cause &rarr; Recommend</div>
+
+    <ul class="prompts">
+      <li><strong>What is the engagement really about?</strong> Define the objective and the constraints: near-term savings, service levels and contractual commitments.</li>
+      <li><strong>Where is the inefficiency?</strong> Identify the largest cost pools and the bottleneck at the port transfer point, and quantify its cost.</li>
+      <li><strong>Why does it happen, and what should Ispat do?</strong> Trace the cost back to the KPI that drives it, then design a testable, accountable fix.</li>
+    </ul>
+  </div>
+
+  <div class="progress-shell">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Question 1 of 8</div>
+  </div>
+
+  <div class="quizwrap" id="quiz"></div>
+
+  <div class="results" id="results">
+    <div class="score-hero">
+      <div class="score-eyebrow">Case complete</div>
+      <div class="score-num"><span id="scoreVal">0</span>/8</div>
+      <div class="rank-title" id="rankTitle"></div>
+      <div class="score-sub" id="scoreMsg"></div>
+    </div>
+
+    <h2 class="recap-title">Did you get it right?</h2>
+    <table class="recap">
+      <tr><th>Concept</th><th>What you learnt</th></tr>
+      <tr><td>Cost Pool Analysis</td><td>Identifying the largest areas of expenditure helps consultants prioritise where to investigate. The largest cost pool should not automatically be treated as the largest source of recoverable savings.</td></tr>
+      <tr><td>Cost-to-Serve</td><td>The cost incurred in delivering a product or service to a customer. It can vary depending on the route, transportation mode, delivery requirements and operational constraints.</td></tr>
+      <tr><td>Root Cause Analysis</td><td>Looking beyond the visible symptom to identify the underlying process, incentive or decision that creates the problem.</td></tr>
+      <tr><td>System vs. Local Optimisation</td><td>Local optimisation improves one team or activity. System optimisation considers the impact on the entire process, including total cost, service levels and downstream consequences.</td></tr>
+      <tr><td>KPI Design and Accountability</td><td>KPIs influence decisions and behaviour. Well-designed KPIs align individual teams with broader business objectives and assign clear ownership for end-to-end outcomes.</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What should be the primary objective of the engagement?",
+    opts: [
+      "Reduce logistics costs as much as possible, even if delivery timelines increase.",
+      "Identify near-term logistics savings while maintaining service levels and avoiding breaches of contractual commitments.",
+      "Wait for the advanced analytics tool to go live before making any operational changes.",
+      "Shift all transportation volumes to the cheapest available mode."
+    ],
+    correct: 1,
+    why: "Ispat needs to identify savings within 6–12 months, before the analytics tool becomes operational. However, cost reduction cannot come at the expense of customer service or contractual commitments. The objective is therefore to identify feasible, near-term improvements while balancing cost and service.",
+    learnt: "A consulting problem statement should define both the desired outcome and the constraints. Cost reduction is not successful if it creates delivery delays, contractual breaches, or other operational problems."
+  },
+  {
+    q: "Before recommending changes to Ispat's transportation network, which information would be most useful to understand?",
+    opts: [
+      "The company's annual marketing expenditure and brand awareness.",
+      "Transportation volumes, utilisation levels, cost per tonne, and contractual constraints across different modes.",
+      "The number of employees working in each manufacturing plant, without any logistics data.",
+      "The historical share price of Ispat and its competitors."
+    ],
+    correct: 1,
+    why: "A logistics optimisation problem requires an understanding of how much material moves through each mode, what each mode costs, how effectively available capacity is being used, and what constraints limit changes. These inputs help identify potential inefficiencies and determine which opportunities warrant further investigation.",
+    learnt: "Before proposing solutions, establish a fact base. A useful operational fact base combines cost, volume, capacity, service requirements, and constraints."
+  },
+  {
+    q: "Which transportation mode has the highest weekly transportation cost based on the data provided?",
+    opts: [
+      "Rail",
+      "Truck",
+      "Barge",
+      "Vessel"
+    ],
+    correct: 1,
+    why: "Weekly transportation cost is weekly volume × cost per tonne. For trucks: 4 lakh tonnes × ₹2,500 per tonne = ₹100 crore per week. This is higher than the stated weekly costs for rail (₹80 crore), barges (₹40 crore) and vessels (₹24 crore). However, the highest current spend does not automatically mean that all of it can be eliminated or shifted to another mode. Feasibility, contractual commitments, delivery requirements and incremental costs must also be considered.",
+    learnt: "Start by identifying the largest cost pools. Then investigate which parts of those costs are avoidable and what it would take to reduce them. A large cost pool is an opportunity to investigate, not proof of achievable savings."
+  },
+  {
+    q: "What is the most likely operational bottleneck described in the case?",
+    opts: [
+      "Trucks are always more expensive because they carry smaller loads.",
+      "The vessel departure and transfer schedule can cause coils to miss a sailing and be shifted to trucks to maintain delivery commitments.",
+      "Rail capacity utilisation is lower than 100%, so all rail transportation should be discontinued.",
+      "The company has too many long-term customer contracts."
+    ],
+    correct: 1,
+    why: "The case describes a mismatch between the vessel's 14-day sailing cycle and the daily arrival and transportation flow. When coils miss a sailing, they may accumulate at the transfer point and eventually be moved by truck to maintain delivery commitments. The issue is not simply the cost of an individual mode. It is the interaction between schedules, inventory accumulation and downstream transportation decisions.",
+    learnt: "Operational inefficiencies often occur at the interfaces between teams, processes, or transportation modes. Understanding the end-to-end flow can reveal costs that are not visible when each activity is examined independently."
+  },
+  {
+    q: "Based on the information above, what was the incremental transportation cost of shifting 3,000 coils (10 tonnes each) from vessel (₹800 per tonne) to truck (₹2,500 per tonne)?",
+    opts: [
+      "₹0.51 crore",
+      "₹5.1 crore",
+      "₹17 crore",
+      "₹51 crore"
+    ],
+    correct: 1,
+    why: "Total weight = 3,000 coils × 10 tonnes = 30,000 tonnes. Incremental cost per tonne = ₹2,500 − ₹800 = ₹1,700. Incremental cost = 30,000 × ₹1,700 = ₹5,10,00,000 = ₹5.1 crore. This quantifies the cost of the observed overflow. It does not, by itself, prove that the entire amount can be eliminated through a scheduling change.",
+    learnt: "Translate operational observations into financial impact using a clear calculation chain: quantity, unit weight, cost differential, and total incremental cost. Always distinguish an observed cost from a recoverable saving."
+  },
+  {
+    q: "What is the most likely underlying root cause of this inefficiency?",
+    opts: [
+      "Vessels are inherently more expensive than trucks.",
+      "Ispat should eliminate all utilisation targets across its logistics operations.",
+      "The vessel utilisation KPI encourages local optimisation without fully accounting for the resulting cost across the logistics network.",
+      "The company should stop serving customers with delivery commitments."
+    ],
+    correct: 2,
+    why: "The current KPI encourages the port operations team to maximise vessel utilisation. However, waiting for a full load can create inventory accumulation and force the downstream logistics team to use trucks. The underlying issue is that individual teams are optimising their own measures without sufficient accountability for the total cost and service outcome across the network.",
+    learnt: "A KPI can produce unintended behaviour when it rewards a local outcome rather than the overall business objective. Good performance measurement should align individual teams with the end-to-end outcome."
+  },
+  {
+    q: "Which immediate operational change should Ispat evaluate first?",
+    opts: [
+      "Mandate 100% vessel utilisation more strictly, regardless of the effect on inventory accumulation.",
+      "Pilot a change in the vessel departure KPI from 100% to 95% utilisation, while monitoring the impact on overflow, total logistics cost, and service levels.",
+      "Shift all vessel volumes to trucks to eliminate scheduling complexity.",
+      "Discontinue all long-term transportation contracts and move entirely to spot-market rates."
+    ],
+    correct: 1,
+    why: "A pilot allowing vessel departure at 95% utilisation could reduce the time spent waiting for additional coils and may help reduce overflow to trucks. However, the impact must be tested rather than assumed. It should be assessed against total logistics cost, pier inventory and overflow, and customer service outcomes, and Ispat must validate the implications for port operations, labour arrangements, shipping practices and existing contracts before implementation.",
+    learnt: "A practical recommendation should be testable, measurable, and sensitive to implementation constraints. A change in a KPI is a hypothesis to validate, not a guaranteed source of savings."
+  },
+  {
+    q: "Which recommendation best addresses both the immediate inefficiency and its underlying cause?",
+    opts: [
+      "Focus exclusively on maximising vessel utilisation, regardless of downstream costs.",
+      "Pilot an operational change at the transfer point, evaluate feasible mode-mix and logistics improvements, and establish end-to-end accountability for total logistics cost and service levels.",
+      "Shift all transportation to trucks because they operate daily.",
+      "Delay all cost optimisation until the advanced analytics tool goes live."
+    ],
+    correct: 1,
+    why: "This recommendation combines an immediate intervention with structural improvements. The vessel KPI pilot addresses the observed transfer-point bottleneck, while mode-mix reviews, backhaul opportunities, rate-card reviews and stockyard assessments broaden the search for feasible savings. An end-to-end logistics KPI, such as total logistics cost per tonne delivered, ensures future decisions account for the total cost of delivery rather than one team's performance in isolation.",
+    learnt: "Strong consulting recommendations address both the visible symptom and the underlying system that created it. They combine practical actions, measurable outcomes, and clear accountability."
+  }
+];
+
+const LETTERS = ["A","B","C","D"];
+let current = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+
+const quizEl = document.getElementById('quiz');
+const fill = document.getElementById('progressFill');
+const label = document.getElementById('progressLabel');
+
+function getScore(){
+  return answers.reduce((sum, sel, idx) => sum + (sel === QUESTIONS[idx].correct ? 1 : 0), 0);
+}
+
+function updateProgress(){
+  const pct = current < QUESTIONS.length ? (current / QUESTIONS.length) * 100 : 100;
+  fill.style.width = pct + '%';
+  label.textContent = current < QUESTIONS.length
+    ? `Question ${current+1} of ${QUESTIONS.length}`
+    : `Complete: ${QUESTIONS.length} of ${QUESTIONS.length}`;
+}
+
+function renderQuestion(){
+  updateProgress();
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('lede').style.display = current === 0 ? '' : 'none';
+  const item = QUESTIONS[current];
+  const answered = answers[current];
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="qcount">Question ${current+1} of ${QUESTIONS.length}</div>
+    <div class="qtext">${item.q}</div>
+    <div class="css-quiz-group"></div>
+    <div class="feedback">
+      <div class="why"><strong>Explanation:</strong> ${item.why}</div>
+      <div class="learnt"><strong>Takeaway:</strong> ${item.learnt}</div>
+    </div>
+    <div class="navrow">
+      <button class="prevbtn" type="button" ${current === 0 ? "disabled" : ""}>Previous</button>
+      <button class="nextbtn" type="button" ${answered === null ? "disabled" : ""}>${current === QUESTIONS.length-1 ? "See results" : "Next question"}</button>
+    </div>
+  `;
+
+  const group = card.querySelector('.css-quiz-group');
+  item.opts.forEach((text, i)=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'css-quiz-opt';
+    btn.textContent = `${LETTERS[i]}. ${text}`;
+    if(answered === null){
+      btn.addEventListener('click', ()=> selectOption(i, card));
+    } else {
+      btn.disabled = true;
+      if(i === item.correct) btn.classList.add('correct');
+      else if(i === answered) btn.classList.add('wrong');
+      else btn.classList.add('dim');
+    }
+    group.appendChild(btn);
+  });
+
+  if(answered !== null){
+    card.querySelector('.feedback').classList.add('show');
+  }
+
+  card.querySelector('.prevbtn').addEventListener('click', ()=>{
+    if(current > 0){
+      current--;
+      renderQuestion();
+    }
+  });
+  card.querySelector('.nextbtn').addEventListener('click', ()=>{
+    current++;
+    if(current < QUESTIONS.length){
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  quizEl.innerHTML = '';
+  quizEl.appendChild(card);
+}
+
+function selectOption(i, card){
+  const item = QUESTIONS[current];
+  answers[current] = i;
+  const opts = card.querySelectorAll('.css-quiz-opt');
+  opts.forEach((btn, idx)=>{
+    btn.disabled = true;
+    if(idx === item.correct) btn.classList.add('correct');
+    else if(idx === i) btn.classList.add('wrong');
+    else btn.classList.add('dim');
+  });
+
+  card.querySelector('.feedback').classList.add('show');
+  card.querySelector('.nextbtn').disabled = false;
+}
+
+function getRankTitle(score){
+  if(score === 8) return "CasedIt!";
+  if(score >= 6) return "Sharp Analyst";
+  if(score >= 4) return "Budding Consultant";
+  return "Case Rookie";
+}
+
+function showResults(){
+  updateProgress();
+  quizEl.innerHTML = '';
+  document.getElementById('results').classList.add('show');
+  const score = getScore();
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('rankTitle').textContent = getRankTitle(score);
+  const msgEl = document.getElementById('scoreMsg');
+  let msg;
+  if(score === 8) msg = "Full marks. You navigated Ispat from problem definition to an integrated recommendation without missing a step.";
+  else if(score >= 6) msg = "Strong case sense. Revisit the misses above to sharpen the diagnosis further.";
+  else if(score >= 4) msg = "A solid start. Review the recap below to reinforce the framework before the next caselet.";
+  else msg = "Worth a second pass. Walk back through the reasoning in each explanation above.";
+  msgEl.textContent = msg;
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
